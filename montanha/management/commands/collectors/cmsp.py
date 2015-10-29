@@ -290,25 +290,23 @@ class CMSP(BaseCollector):
                     pass
 
             row = line.split('#')
-            if len(row) > 1:
+            row_count = len(row)
+            if row_count > 1:
                 name = row[1]
-                nickname = row[2]
-
-                if nickname:
+                if row_count >= 3:
+                    nickname = row[2]
                     legislator = self.add_legislator(nickname)
                 else:
                     legislator = self.add_legislator(name)
 
-                aa = re.search('\^\p([^\^|%]*)(\^|%)', row[7])
-                if aa:
-                    party_siglum = aa.group(1)
-                else:
-                    pass
-
                 try:
                     date_start_re = re.search('\^\i([^\^|%]*)(\^|%)', row[7])
                     start_year = int(date_start_re.group(1).split('/')[2])
-                    date_start = datetime(start_year, 1, 1)
+                    aa = re.search('\^\p([^\^|%]*)(\^|%)', row[7])
+                    if aa:
+                        party_siglum = aa.group(1)
+                    else:
+                        party_siglum = ''
                 except IndexError:
                     continue
 
